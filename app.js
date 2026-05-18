@@ -17,6 +17,8 @@ app.use('/auth', require('./routes/auth'));
 app.use('/potential-partners', require('./routes/potentialPartner'));
 
 app.get('/', (req, res) => res.redirect('/auth/login'));
+app.use('/follow-up', require('./routes/followUp'));
+app.use('/mou', require('./routes/mou'));
 
 app.listen(3000, () => {
   console.log('Server berjalan di http://localhost:3000');
