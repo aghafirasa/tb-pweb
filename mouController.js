@@ -56,9 +56,22 @@ const destroy = (req, res) => {
 };
 
 const approve = (req, res) => {
-  db.query('UPDATE mou SET status="disetujui" WHERE id=?', [req.params.id], (err) => {
+  const mouId = req.params.id;
+
+  db.query('SELECT potential_partner_id FROM mou WHERE id = ?', [mouId], (err, results) => {
     if (err) throw err;
-    res.redirect('/mou');
+    if (results.length === 0) return res.redirect('/mou');
+
+    const partnerId = results[0].potential_partner_id;
+
+    db.query('UPDATE mou SET status="disetujui" WHERE id=?', [mouId], (err) => {
+      if (err) throw err;
+
+      db.query('UPDATE potential_partners SET status="aktif" WHERE id=?', [partnerId], (err) => {
+        if (err) throw err;
+        res.redirect('/mou');
+      });
+    });
   });
 };
 
